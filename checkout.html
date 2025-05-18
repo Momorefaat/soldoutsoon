@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - SoldOutSoon</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: 'Poppins', sans-serif; background-color: #f8fafc; }
+    </style>
+</head>
+<body>
+    <div id="nav-placeholder"></div>
+    <section class="py-16 bg-gray-50">
+        <div class="max-w-3xl mx-auto bg-white p-8 rounded-lg shadow-md">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6">Checkout</h2>
+            <div id="checkout-summary"></div>
+            <div class="mt-6">
+                <h3 class="text-xl font-bold text-gray-800 mb-4">Payment Method</h3>
+                <select id="payment-method" class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-purple-500">
+                    <option value="visa">Visa ending in 1234</option>
+                    <option value="mastercard">MasterCard ending in 5678</option>
+                </select>
+            </div>
+            <button id="pay-now" class="w-full mt-6 bg-purple-600 text-white py-2 rounded hover:bg-purple-700">Pay Now</button>
+        </div>
+    </section>
+    <div id="footer-placeholder"></div>
+
+    <script src="data.js"></script>
+    <script src="auth.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            fetch('nav.html').then(res => res.text()).then(html => document.getElementById('nav-placeholder').innerHTML = html);
+            fetch('footer.html').then(res => res.text()).then(html => document.getElementById('footer-placeholder').innerHTML = html);
+
+            const checkout = JSON.parse(localStorage.getItem('checkout'));
+            if (!checkout) {
+                document.getElementById('checkout-summary').innerHTML = '<p>No items in checkout.</p>';
+                return;
+            }
+
+            // Display checkout summary
+            document.getElementById('checkout-summary').innerHTML = `
+                <div class="flex justify-between items-center mb-4">
+                    <span class="font-medium text-gray-700">Event:</span>
+                    <span>${checkout.eventName}</span>
+                </div>
+                <div class="flex justify-between items-center mb-4">
+                    <span class="font-medium text-gray-700">Ticket Type:</span>
+                    <span>${checkout.ticketType}</span>
+                </div>
+                <div class="flex justify-between items-center mb-4">
+                    <span class="font-medium text-gray-700">Quantity:</span>
+                    <span>${checkout.qty}</span>
+                </div>
+                <div class="flex justify-between items-center font-bold text-lg">
+                    <span class="text-gray-800">Total:</span>
+                    <span class="text-purple-600">$${checkout.total}</span>
+                </div>
+            `;
+
+            // Handle payment
+            document.getElementById('pay-now').addEventListener('click', async () => {
+                const user = getCurrentUser();
+                if (!user) {
+                    window.location.href = 'login.html';
+                    return;
+                }
+
+                const orderData = {
+                    userId: user.id,
+                    eventId: checkout.eventId,
+                    ticketType: checkout.ticketType,
+                    qty: checkout.qty,
+                    total: checkout.total,
+                    paymentMethod: document.getElementById('payment-method').value,
+                };
+
+                try {
+                    const response = await fetch('/api/orders', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            Authorization: `Bearer ${user.token}`,
+                        },
+                        body: JSON.stringify(orderData),
+                    });
+
+                    if (response.ok) {
+                        alert('Payment successful! Your tickets have been sent to your email.');
+                        localStorage.removeItem('checkout');
+                        window.location.href = 'my-tickets.html';
+                    } else {
+                        const error = await response.json();
+                        alert(error.message || 'Payment failed. Please try again.');
+                    }
+                } catch (error) {
+                    console.error('Error processing payment:', error);
+                    alert('An error occurred. Please try again.');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

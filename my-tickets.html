@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Tickets - SoldOutSoon</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: 'Poppins', sans-serif; background-color: #f8fafc; }
+        .stamp { font-family: 'Courier New', monospace; color: #dc2626; border: 3px solid #dc2626; padding: 5px 10px; transform: rotate(-15deg); opacity: 0.8; }
+    </style>
+</head>
+<body>
+    <div id="nav-placeholder"></div>
+    <section class="py-16 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4">
+            <h2 class="text-3xl font-bold text-gray-800 mb-10">My Tickets</h2>
+            <div id="tickets-list"></div>
+        </div>
+    </section>
+    <div id="refund-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-md mx-4 p-6">
+            <h3 class="text-xl font-bold text-gray-800 mb-4">Confirm Refund</h3>
+            <p class="text-gray-600 mb-6">Are you sure you want to refund this ticket? This action cannot be undone.</p>
+            <div class="flex justify-end space-x-3">
+                <button id="cancel-refund" class="px-4 py-2 border border-gray-300 text-gray-700 rounded hover:bg-gray-100">Cancel</button>
+                <button id="confirm-refund" class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">Refund</button>
+            </div>
+        </div>
+    </div>
+    <div id="footer-placeholder"></div>
+
+    <script src="data.js"></script>
+    <script src="auth.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            fetch('nav.html').then(res => res.text()).then(html => document.getElementById('nav-placeholder').innerHTML = html);
+            fetch('footer.html').then(res => res.text()).then(html => document.getElementById('footer-placeholder').innerHTML = html);
+
+            const user = getCurrentUser();
+            if (!user) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            const ticketsList = document.getElementById('tickets-list');
+
+            try {
+                const response = await fetch(`/api/orders/user/${user._id}`, {
+                    headers: {
+                        Authorization: `Bearer ${user.token}`,
+                    }
+                });
+                const userOrders = await response.json();
+                if (!Array.isArray(userOrders) || userOrders.length === 0) {
+                    ticketsList.innerHTML = '<p>You have no tickets.</p>';
+                    return;
+                }
+
+                userOrders.forEach(order => {
+                    const item = order.items[0]; // Assuming one event per order for simplicity
+                    const eventDate = new Date(item.eventDate);
+                    const isPastEvent = eventDate < new Date();
+                    ticketsList.innerHTML += `
+                        <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+                          <div class="flex flex-col md:flex-row">
+                            <div class="md:w-1/4 mb-4 md:mb-0 relative">
+                              <img src="${item.imageUrl || 'default-image.jpg'}" alt="${item.eventName}" class="w-full h-32 object-cover rounded">
+                              ${isPastEvent ? '<div class="absolute inset-0 flex items-center justify-center"><span class="stamp">SHOW OVER</span></div>' : ''}
+                            </div>
+                            <div class="md:w-3/4 md:pl-6">
+                              <h4 class="text-lg font-bold text-gray-800">${item.eventName}</h4>
+                              <p class="text-gray-600 text-sm mb-2"><i class="fas fa-calendar-day mr-1"></i> ${eventDate.toLocaleDateString()} • ${item.eventTime || 'TBD'}</p>
+                              <p class="text-gray-600 text-sm mb-3"><i class="fas fa-map-marker-alt mr-1"></i> ${item.venue}</p>
+                              <p class="text-gray-700 mb-2"><span class="font-medium">Tickets:</span> ${item.quantity} x ${item.ticketType}</p>
+                              <p class="text-gray-700 mb-2"><span class="font-medium">Total:</span> $${order.totalAmount}</p>
+                              <p class="text-gray-700 mb-4"><span class="font-medium">Status:</span> ${order.status}</p>
+                              ${order.status === 'completed' && !isPastEvent ? `<button class="text-red-600 hover:text-red-800 font-medium" onclick="refundTicket('${order._id}')">Request Refund</button>` : ''}
+                            </div>
+                          </div>
+                        </div>
+                    `;
+                });
+            } catch (error) {
+                console.error('Error fetching orders:', error);
+                ticketsList.innerHTML = '<p>Error loading tickets.</p>';
+            }
+
+            window.refundTicket = async function(orderId) {
+                const modal = document.getElementById('refund-modal');
+                modal.classList.remove('hidden');
+                document.getElementById('confirm-refund').onclick = async () => {
+                    try {
+                        const response = await fetch(`/api/orders/${orderId}/refund`, {
+                            method: 'POST',
+                            headers: {
+                                Authorization: `Bearer ${user.token}`,
+                            }
+                        });
+                        if (response.ok) {
+                            alert('Ticket refunded successfully.');
+                            modal.classList.add('hidden');
+                            window.location.reload();
+                        } else {
+                            alert('Refund failed.');
+                        }
+                    } catch (error) {
+                        console.error('Refund error:', error);
+                        alert('Refund error.');
+                    }
+                };
+                document.getElementById('cancel-refund').onclick = () => modal.classList.add('hidden');
+            };
+        });
+    </script>
+</body>
+</html>

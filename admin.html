@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - SoldOutSoon</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: 'Poppins', sans-serif; background-color: #f8fafc; }
+    </style>
+</head>
+<body>
+    <div id="nav-placeholder"></div>
+    <section class="py-16 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4">
+            <h2 class="text-3xl font-bold text-gray-800 mb-10">Admin Dashboard</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Add Artist Form -->
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-bold mb-4">Add Artist</h3>
+                    <form id="artist-form">
+                        <div class="mb-4">
+                            <label for="artist-name" class="block text-gray-700 mb-2">Name</label>
+                            <input type="text" id="artist-name" placeholder="Name" class="w-full p-2 mb-2 border rounded" required>
+                        </div>
+                        <div class="mb-4">
+                            <label for="artist-bio" class="block text-gray-700 mb-2">Bio</label>
+                            <textarea id="artist-bio" placeholder="Bio" class="w-full p-2 mb-2 border rounded" rows="3" required></textarea>
+                        </div>
+                        <div class="mb-4">
+                            <label for="artist-genres" class="block text-gray-700 mb-2">Genres (comma-separated)</label>
+                            <input type="text" id="artist-genres" placeholder="Genres (comma-separated)" class="w-full p-2 mb-2 border rounded" required>
+                        </div>
+                        <div class="mb-4">
+                            <label for="artist-image" class="block text-gray-700 mb-2">Image URL</label>
+                            <input type="text" id="artist-image" placeholder="Image URL" class="w-full p-2 mb-2 border rounded" required>
+                        </div>
+                        <button type="submit" class="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700">Add Artist</button>
+                    </form>
+                </div>
+                <!-- Add Event Form -->
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-bold mb-4">Add Event</h3>
+                    <form id="event-form">
+                        <div class="mb-4">
+                            <label for="event-name" class="block text-gray-700 mb-2">Event Name</label>
+                            <input type="text" id="event-name" class="w-full px-4 py-2 border rounded" required>
+                        </div>
+                        <div class="mb-4">
+                            <label for="event-date" class="block text-gray-700 mb-2">Date</label>
+                            <input type="date" id="event-date" class="w-full px-4 py-2 border rounded" required>
+                        </div>
+                        <div class="mb-4">
+                            <label for="event-time" class="block text-gray-700 mb-2">Time</label>
+                            <input type="text" id="event-time" placeholder="e.g., 7:00 PM" class="w-full px-4 py-2 border rounded" required>
+                        </div>
+                        <div class="mb-4">
+                            <label for="event-description" class="block text-gray-700 mb-2">Description</label>
+                            <textarea id="event-description" class="w-full px-4 py-2 border rounded" rows="3" required></textarea>
+                        </div>
+                        <div class="mb-4">
+                            <label for="venue-name" class="block text-gray-700 mb-2">Venue Name</label>
+                            <input type="text" id="venue-name" class="w-full px-4 py-2 border rounded" required>
+                        </div>
+                        <div class="mb-4">
+                            <label for="venue-address" class="block text-gray-700 mb-2">Venue Address</label>
+                            <input type="text" id="venue-address" class="w-full px-4 py-2 border rounded" required>
+                        </div>
+                        <div class="mb-4">
+                            <label for="venue-city" class="block text-gray-700 mb-2">Venue City</label>
+                            <input type="text" id="venue-city" class="w-full px-4 py-2 border rounded" required>
+                        </div>
+                        <div class="mb-4">
+                            <label for="venue-country" class="block text-gray-700 mb-2">Venue Country</label>
+                            <input type="text" id="venue-country" class="w-full px-4 py-2 border rounded" required>
+                        </div>
+                        <div class="mb-4">
+                            <label for="venue-capacity" class="block text-gray-700 mb-2">Venue Capacity</label>
+                            <input type="number" id="venue-capacity" class="w-full px-4 py-2 border rounded" required>
+                        </div>
+                        <div class="mb-4">
+                            <label for="event-artists" class="block text-gray-700 mb-2">Artists</label>
+                            <select id="event-artists" multiple class="w-full px-4 py-2 border rounded"></select>
+                        </div>
+                        <div class="mb-4">
+                            <label for="event-genres" class="block text-gray-700 mb-2">Genres (comma-separated)</label>
+                            <input type="text" id="event-genres" class="w-full px-4 py-2 border rounded">
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-gray-700 mb-2">Ticket Types</label>
+                            <div id="ticket-types-container"></div>
+                            <button type="button" id="add-ticket-type" class="bg-blue-500 text-white px-4 py-2 rounded mt-2">Add Ticket Type</button>
+                        </div>
+                        <div class="mb-4">
+                            <label for="event-images" class="block text-gray-700 mb-2">Images (comma-separated URLs)</label>
+                            <input type="text" id="event-images" class="w-full px-4 py-2 border rounded">
+                        </div>
+                        <div class="mb-4">
+                            <label for="age-restriction" class="block text-gray-700 mb-2">Age Restriction</label>
+                            <select id="age-restriction" class="w-full px-4 py-2 border rounded">
+                                <option value="All Ages">All Ages</option>
+                                <option value="18+">18+</option>
+                                <option value="21+">21+</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700">Add Event</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+    <div id="footer-placeholder"></div>
+
+    <script src="auth.js"></script>
+    <script>
+        let allArtists = [];
+        let ticketTypeCount = 0;
+
+        async function loadArtists() {
+            try {
+                const response = await fetch('/api/artists');
+                if (response.ok) {
+                    allArtists = await response.json();
+                    const select = document.getElementById('event-artists');
+                    allArtists.forEach(artist => {
+                        const option = document.createElement('option');
+                        option.value = artist._id;
+                        option.textContent = artist.name;
+                        select.appendChild(option);
+                    });
+                } else {
+                    console.error('Failed to load artists');
+                }
+            } catch (error) {
+                console.error('Error loading artists:', error);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            fetch('nav.html').then(res => res.text()).then(html => document.getElementById('nav-placeholder').innerHTML = html);
+            fetch('footer.html').then(res => res.text()).then(html => document.getElementById('footer-placeholder').innerHTML = html);
+
+            const user = getCurrentUser();
+            if (!user || (user.role !== 'admin' && user.role !== 'organizer')) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            loadArtists();
+
+            // Add first ticket type by default
+            document.getElementById('add-ticket-type').click();
+
+            document.getElementById('artist-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const artist = {
+                    userId: user._id,
+                    name: document.getElementById('artist-name').value,
+                    bio: document.getElementById('artist-bio').value,
+                    genres: document.getElementById('artist-genres').value.split(',').map(g => g.trim()),
+                    imageUrl: document.getElementById('artist-image').value
+                };
+                const response = await fetch('/api/artists', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(artist)
+                });
+                if (response.ok) {
+                    alert('Artist added successfully!');
+                    e.target.reset();
+                } else {
+                    alert('Failed to add artist.');
+                }
+            });
+
+            document.getElementById('event-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const event = {
+                    userId: user._id,
+                    eventName: document.getElementById('event-name').value,
+                    eventDate: document.getElementById('event-date').value,
+                    eventTime: document.getElementById('event-time').value,
+                    description: document.getElementById('event-description').value,
+                    venue: {
+                        name: document.getElementById('venue-name').value,
+                        location: {
+                            address: document.getElementById('venue-address').value,
+                            city: document.getElementById('venue-city').value,
+                            country: document.getElementById('venue-country').value
+                        },
+                        capacity: parseInt(document.getElementById('venue-capacity').value)
+                    },
+                    artists: Array.from(document.getElementById('event-artists').selectedOptions).map(option => {
+                        const artist = allArtists.find(a => a._id.toString() === option.value);
+                        return {
+                            name: artist.name,
+                            artistId: artist._id,
+                            bio: artist.bio,
+                            imageUrl: artist.imageUrl
+                        };
+                    }),
+                    genres: document.getElementById('event-genres').value.split(',').map(g => g.trim()),
+                    ticketTypes: Array.from(document.getElementById('ticket-types-container').querySelectorAll('.ticket-type')).map(div => {
+                        const inputs = div.querySelectorAll('input');
+                        return {
+                            name: inputs[0].value,
+                            price: parseFloat(inputs[1].value),
+                            available: parseInt(inputs[2].value),
+                            total: parseInt(inputs[3].value)
+                        };
+                    }),
+                    images: document.getElementById('event-images').value.split(',').map(img => img.trim()),
+                    ageRestriction: document.getElementById('age-restriction').value
+                };
+                const response = await fetch('/api/events', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(event)
+                });
+                if (response.ok) {
+                    alert('Event added successfully!');
+                    e.target.reset();
+                    document.getElementById('ticket-types-container').innerHTML = '';
+                    ticketTypeCount = 0;
+                    document.getElementById('add-ticket-type').click();
+                } else {
+                    alert('Failed to add event.');
+                }
+            });
+
+            document.getElementById('add-ticket-type').addEventListener('click', () => {
+                ticketTypeCount++;
+                const container = document.getElementById('ticket-types-container');
+                const ticketTypeDiv = document.createElement('div');
+                ticketTypeDiv.className = 'ticket-type grid grid-cols-4 gap-4 mb-4';
+                ticketTypeDiv.innerHTML = `
+                    <input type="text" placeholder="Name" class="px-4 py-2 border rounded" required>
+                    <input type="number" placeholder="Price" class="px-4 py-2 border rounded" required>
+                    <input type="number" placeholder="Available" class="px-4 py-2 border rounded" required>
+                    <input type="number" placeholder="Total" class="px-4 py-2 border rounded" required>
+                `;
+                container.appendChild(ticketTypeDiv);
+            });
+        });
+    </script>
+</body>
+</html>
