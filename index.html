@@ -4,72 +4,95 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SoldOutSoon - Concert Tickets</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
-        body { font-family: 'Poppins', sans-serif; background-color: #f8fafc; }
-        .hero-gradient { background: linear-gradient(135deg, #6b21a8 0%, #1e40af 100%); }
-        .ticket-card { transition: all 0.3s ease; }
-        .ticket-card:hover { transform: translateY(-5px); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); }
-        .genre-card { transition: all 0.3s ease; }
-        .genre-card:hover { transform: scale(1.05); }
-    </style>
+    <link rel="stylesheet" href="theme.css">
 </head>
 <body>
     <!-- Navigation -->
     <div id="nav-placeholder"></div>
 
     <!-- Hero Section -->
-    <section class="hero-gradient text-white py-20">
-        <div class="max-w-7xl mx-auto px-4">
-            <h1 class="text-4xl md:text-5xl font-bold mb-6">Your Next Unforgettable Experience Awaits</h1>
-            <p class="text-xl mb-8">Discover and book tickets to the hottest concerts and events.</p>
-            <a href="events.html" class="bg-white text-purple-700 font-bold py-3 px-8 rounded-full hover:bg-purple-100 transition duration-300">Explore Events</a>
+    <section class="hero">
+        <div class="hero-bg" style="background-image:url('https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?auto=format&fit=crop&w=1800&q=80');" role="img" aria-label="Crowd at a concert under stage lights"></div>
+        <div class="hero-overlay"></div>
+        <div class="container hero-content">
+            <span class="eyebrow">Concerts, festivals &amp; live nights</span>
+            <h1>Your next unforgettable night starts here</h1>
+            <p class="subtitle">Discover and book tickets to the hottest concerts, festivals and live shows near you &mdash; from intimate clubs to sold-out arenas.</p>
+
+            <form id="hero-search-form" class="search-card">
+                <div class="search-field">
+                    <label for="hero-search-event">Event or artist</label>
+                    <input type="text" id="hero-search-event" placeholder="Search by name...">
+                </div>
+                <div class="search-field">
+                    <label for="hero-search-city">City</label>
+                    <input type="text" id="hero-search-city" placeholder="Any city">
+                </div>
+                <div class="search-field">
+                    <label for="hero-search-date">Date</label>
+                    <input type="date" id="hero-search-date">
+                </div>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-search" aria-hidden="true"></i> Find tickets
+                </button>
+            </form>
+
+            <div class="chip-row">
+                <a href="events.html?genre=Pop" class="chip">Pop</a>
+                <a href="events.html?genre=Rock" class="chip">Rock</a>
+                <a href="events.html?genre=Jazz" class="chip">Jazz</a>
+                <a href="events.html?genre=Dance/Electronic" class="chip">Dance/Electronic</a>
+            </div>
         </div>
     </section>
 
     <!-- Upcoming Events -->
-    <section class="py-16 bg-white">
-        <div class="max-w-7xl mx-auto px-4">
-            <h2 class="text-3xl font-bold text-gray-800 mb-10 text-center">Upcoming Events</h2>
-            <div id="upcoming-events" class="grid grid-cols-1 md:grid-cols-3 gap-8"></div>
+    <section class="section">
+        <div class="container">
+            <div class="section-head">
+                <h2>Upcoming events</h2>
+                <a href="events.html" class="section-link">View all events <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+            </div>
+            <div id="upcoming-events" class="event-grid"></div>
         </div>
     </section>
 
-    <!-- Ticket Types -->
-    <section class="py-16 bg-gray-50">
-        <div class="max-w-7xl mx-auto px-4">
-            <h2 class="text-3xl font-bold text-gray-800 mb-10 text-center">Ticket Options</h2>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div class="bg-white p-6 rounded-lg shadow-md text-center">
-                    <h3 class="text-xl font-bold text-gray-800 mb-2">General Admission</h3>
-                    <p class="text-gray-600 mb-4">Standard access to the event.</p>
-                    <span class="text-purple-600 font-bold text-lg">$49.99+</span>
-                    <a href="events.html" class="block mt-4 bg-purple-600 text-white px-6 py-2 rounded-full hover:bg-purple-700">Find Events</a>
+    <!-- Why SoldOutSoon -->
+    <section class="section" style="background:#fff;padding-top:0;">
+        <div class="container">
+            <div class="why-grid">
+                <div class="why-card">
+                    <div class="icon-tile"><i class="fas fa-lock" aria-hidden="true"></i></div>
+                    <h3>Secure checkout</h3>
+                    <p>Every purchase is encrypted end-to-end, so your payment details stay protected.</p>
                 </div>
-                <div class="bg-white p-6 rounded-lg shadow-md text-center">
-                    <h3 class="text-xl font-bold text-gray-800 mb-2">VIP Experience</h3>
-                    <p class="text-gray-600 mb-4">Premium seating and amenities.</p>
-                    <span class="text-purple-600 font-bold text-lg">$149.99+</span>
-                    <a href="events.html" class="block mt-4 bg-purple-600 text-white px-6 py-2 rounded-full hover:bg-purple-700">Find Events</a>
+                <div class="why-card">
+                    <div class="icon-tile"><i class="fas fa-bolt" aria-hidden="true"></i></div>
+                    <h3>Instant e-tickets</h3>
+                    <p>Your tickets land straight in your account and inbox, ready to scan at the door.</p>
                 </div>
-                <div class="bg-white p-6 rounded-lg shadow-md text-center">
-                    <h3 class="text-xl font-bold text-gray-800 mb-2">Early Bird</h3>
-                    <p class="text-gray-600 mb-4">Discounted tickets, limited availability.</p>
-                    <span class="text-purple-600 font-bold text-lg">$29.99+</span>
-                    <a href="events.html" class="block mt-4 bg-purple-600 text-white px-6 py-2 rounded-full hover:bg-purple-700">Find Events</a>
+                <div class="why-card">
+                    <div class="icon-tile"><i class="fas fa-rotate-left" aria-hidden="true"></i></div>
+                    <h3>Easy refunds</h3>
+                    <p>Plans change. Request a refund on eligible orders in just a couple of clicks.</p>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Genres -->
-    <section class="py-16 bg-white">
-        <div class="max-w-7xl mx-auto px-4">
-            <h2 class="text-3xl font-bold text-gray-800 mb-2 text-center">Find Your Perfect Event</h2>
-            <p class="text-gray-600 text-center mb-10">Browse by your favorite music genres</p>
-            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4" id="genres"></div>
+    <section class="section">
+        <div class="container">
+            <div class="section-head" style="margin-bottom:8px;">
+                <h2>Find your perfect event</h2>
+            </div>
+            <p class="section-sub" style="margin-bottom:28px;">Browse by your favorite music genres</p>
+            <div class="genre-grid" id="genres"></div>
         </div>
     </section>
 
@@ -79,6 +102,43 @@
     <script src="data.js"></script>
     <script src="auth.js"></script>
     <script>
+    function urgencyTag(event) {
+        const types = event.ticketTypes || [];
+        const available = types.reduce((sum, t) => sum + (t.available || 0), 0);
+        const total = types.reduce((sum, t) => sum + (t.total || t.available || 0), 0);
+        if (available > 0 && available <= 20) return { text: `Only ${available} left`, icon: true };
+        if (total > 0 && (available / total) < 0.4) return { text: 'Selling fast', icon: true };
+        return { text: 'Just added', icon: true };
+    }
+
+    function renderEventCard(event) {
+        const date = new Date(event.eventDate);
+        const month = date.toLocaleDateString('en-US', { month: 'short' });
+        const day = date.getDate();
+        const urgency = urgencyTag(event);
+        const fromPrice = Math.min(...event.ticketTypes.map(t => t.price)).toFixed(2);
+        const genre = (event.genres && event.genres[0]) || 'Live';
+        return `
+            <a href="event-detail.html?id=${event._id}" class="event-card">
+                <div class="media">
+                    <img src="${event.images[0]}" alt="${event.eventName}">
+                    <div class="date-badge"><span class="mon">${month}</span><span class="day">${day}</span></div>
+                    <span class="urgency-tag"><span class="dot"></span>${urgency.text}</span>
+                </div>
+                <div class="body">
+                    <div class="kicker">${genre}</div>
+                    <h3>${event.eventName}</h3>
+                    <div class="meta-row"><i class="fas fa-location-dot" aria-hidden="true"></i> ${event.venue.name}, ${event.venue.location.city}</div>
+                    <div class="meta-row"><i class="fas fa-clock" aria-hidden="true"></i> ${date.toLocaleDateString()} &bull; ${event.eventTime}</div>
+                    <div class="card-footer">
+                        <div class="price-from"><span class="label">From</span><span class="price">$${fromPrice}</span></div>
+                        <span class="btn btn-primary btn-sm">Details</span>
+                    </div>
+                </div>
+            </a>
+        `;
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
         // Load nav and footer
         fetch('nav.html').then(res => res.text()).then(html => {
@@ -87,6 +147,19 @@
         });
         fetch('footer.html').then(res => res.text()).then(html => document.getElementById('footer-placeholder').innerHTML = html);
 
+        // Hero search redirects to the events page with filters
+        document.getElementById('hero-search-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const params = new URLSearchParams();
+            const q = document.getElementById('hero-search-event').value.trim();
+            const city = document.getElementById('hero-search-city').value.trim();
+            const date = document.getElementById('hero-search-date').value;
+            if (q) params.append('q', q);
+            if (city) params.append('location', city);
+            if (date) params.append('from', date);
+            window.location.href = `events.html?${params.toString()}`;
+        });
+
         // Fetch and populate upcoming events
         fetch('/api/events')
             .then(response => response.json())
@@ -94,36 +167,32 @@
                 const upcoming = data.slice(0, 3);
                 const eventsDiv = document.getElementById('upcoming-events');
                 upcoming.forEach(event => {
-                    eventsDiv.innerHTML += `
-                        <div class="ticket-card bg-white rounded-lg overflow-hidden shadow-md">
-                            <div class="relative">
-                                <img src="${event.images[0]}" alt="${event.eventName}" class="w-full h-48 object-cover">
-                                <span class="absolute top-2 right-2 bg-${event.isActive ? 'green' : 'red'}-500 text-white text-xs font-bold px-2 py-1 rounded-full">${event.isActive ? 'Active' : 'Inactive'}</span>
-                            </div>
-                            <div class="p-4">
-                                <h3 class="text-xl font-bold text-gray-800 mb-2">${event.eventName}</h3>
-                                <p class="text-gray-600 text-sm mb-2"><i class="fas fa-calendar-day mr-1"></i> ${new Date(event.eventDate).toLocaleDateString()} • ${event.eventTime}</p>
-                                <p class="text-gray-600 text-sm mb-3"><i class="fas fa-map-marker-alt mr-1"></i> ${event.venue.location.city}</p>
-                                <div class="flex justify-between items-center">
-                                    <span class="text-purple-600 font-bold">From $${Math.min(...event.ticketTypes.map(t => t.price)).toFixed(2)}</span>
-                                    <a href="event-detail.html?id=${event._id}" class="bg-purple-600 text-white px-4 py-1 rounded-full text-sm hover:bg-purple-700">Details</a>
-                                </div>
-                            </div>
-                        </div>
-                    `;
+                    eventsDiv.innerHTML += renderEventCard(event);
                 });
             })
             .catch(error => console.error('Error fetching events:', error));
 
         // Populate genres
-        const genresList = ['Pop', 'Rock', 'Hip Hop/Rap', 'R&B', 'Jazz', 'Dance/Electronic', 'Blues', 'Indie', 'Arabic', 'Classical', 'Metal', 'Country'];
-        const colors = ['purple', 'red', 'blue', 'pink', 'yellow', 'green', 'indigo', 'teal', 'orange', 'gray', 'amber', 'rose'];
+        const genresList = [
+            { name: 'Pop', icon: 'fa-star', cls: 'genre-pop' },
+            { name: 'Rock', icon: 'fa-guitar', cls: 'genre-rock' },
+            { name: 'Hip Hop/Rap', icon: 'fa-microphone', cls: 'genre-hiphop' },
+            { name: 'R&B', icon: 'fa-heart', cls: 'genre-rnb' },
+            { name: 'Jazz', icon: 'fa-music', cls: 'genre-jazz' },
+            { name: 'Dance/Electronic', icon: 'fa-bolt', cls: 'genre-dance' },
+            { name: 'Blues', icon: 'fa-cloud-rain', cls: 'genre-blues' },
+            { name: 'Indie', icon: 'fa-feather', cls: 'genre-indie' },
+            { name: 'Arabic', icon: 'fa-globe', cls: 'genre-arabic' },
+            { name: 'Classical', icon: 'fa-masks-theater', cls: 'genre-classical' },
+            { name: 'Metal', icon: 'fa-skull', cls: 'genre-metal' },
+            { name: 'Country', icon: 'fa-hat-cowboy', cls: 'genre-country' }
+        ];
         const genresDiv = document.getElementById('genres');
-        genresList.forEach((genre, i) => {
+        genresList.forEach((genre) => {
             genresDiv.innerHTML += `
-                <a href="events.html?genre=${genre}" class="genre-card bg-${colors[i]}-600 rounded-lg p-4 text-center text-white cursor-pointer hover:bg-${colors[i]}-700">
-                    <i class="fas fa-music text-3xl mb-2"></i>
-                    <h3 class="font-bold">${genre}</h3>
+                <a href="events.html?genre=${genre.name}" class="genre-tile ${genre.cls}">
+                    <span class="icon-circle"><i class="fas ${genre.icon}" aria-hidden="true"></i></span>
+                    <span class="name">${genre.name}</span>
                 </a>
             `;
         });
@@ -134,11 +203,11 @@
         const userSection = document.getElementById('user-section');
         if (user) {
             userSection.innerHTML = `
-                <span class="text-white">${user.username}</span>
-                <a href="#" id="logout-link" class="ml-4 text-purple-600 hover:underline">Logout</a>
+                <a href="my-tickets.html" class="nav-link"><i class="fas fa-user-circle" aria-hidden="true"></i><span class="nav-label">${user.username}</span></a>
+                <a href="#" id="logout-link" class="nav-link">Logout</a>
             `;
             if (user.role === 'admin' || user.role === 'organizer') {
-                userSection.innerHTML += `<a href="admin.html" class="ml-4 text-purple-600 hover:underline">Admin</a>`;
+                userSection.innerHTML += `<a href="admin.html" class="nav-link">Admin</a>`;
             }
             document.getElementById('logout-link').addEventListener('click', (e) => {
                 e.preventDefault();
@@ -147,7 +216,7 @@
                 window.location.href = 'index.html';
             });
         } else {
-            userSection.innerHTML = `<a href="login.html" class="text-purple-600 hover:underline">Login</a>`;
+            userSection.innerHTML = `<a href="login.html" class="nav-link nav-login"><i class="fas fa-user-circle" aria-hidden="true"></i><span class="nav-label">Login</span></a>`;
         }
     }
 </script>

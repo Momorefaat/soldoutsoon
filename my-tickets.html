@@ -4,28 +4,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Tickets - SoldOutSoon</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="theme.css">
     <style>
-        body { font-family: 'Poppins', sans-serif; background-color: #f8fafc; }
-        .stamp { font-family: 'Courier New', monospace; color: #dc2626; border: 3px solid #dc2626; padding: 5px 10px; transform: rotate(-15deg); opacity: 0.8; }
+        .stamp { font-family: 'Courier New', monospace; color: #dc2626; border: 3px solid #dc2626; padding: 5px 10px; transform: rotate(-15deg); opacity: 0.85; border-radius: 6px; background: rgba(255,255,255,.85); font-weight: 700; letter-spacing: .04em; }
     </style>
 </head>
 <body>
     <div id="nav-placeholder"></div>
-    <section class="py-16 bg-gray-50">
-        <div class="max-w-7xl mx-auto px-4">
-            <h2 class="text-3xl font-bold text-gray-800 mb-10">My Tickets</h2>
+    <section class="section">
+        <div class="container">
+            <div class="page-title-row"><h1>My tickets</h1></div>
             <div id="tickets-list"></div>
         </div>
     </section>
     <div id="refund-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
-        <div class="bg-white rounded-lg shadow-xl w-full max-w-md mx-4 p-6">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-md mx-4 p-6" style="border-radius:22px;">
             <h3 class="text-xl font-bold text-gray-800 mb-4">Confirm Refund</h3>
             <p class="text-gray-600 mb-6">Are you sure you want to refund this ticket? This action cannot be undone.</p>
             <div class="flex justify-end space-x-3">
-                <button id="cancel-refund" class="px-4 py-2 border border-gray-300 text-gray-700 rounded hover:bg-gray-100">Cancel</button>
-                <button id="confirm-refund" class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">Refund</button>
+                <button id="cancel-refund" class="btn btn-outline">Cancel</button>
+                <button id="confirm-refund" class="btn btn-primary" style="background:#dc2626;">Refund</button>
             </div>
         </div>
     </div>
@@ -54,30 +57,30 @@
                 });
                 const userOrders = await response.json();
                 if (!Array.isArray(userOrders) || userOrders.length === 0) {
-                    ticketsList.innerHTML = '<p>You have no tickets.</p>';
+                    ticketsList.innerHTML = '<div class="empty-state"><i class="fas fa-ticket-alt" aria-hidden="true"></i><h3>No tickets yet</h3><p>Browse events and grab your next night out.</p><a href="events.html" class="btn btn-primary" style="margin-top:16px;">Browse events</a></div>';
                     return;
                 }
+
+                const statusClass = { completed: 'status-completed', pending: 'status-pending', refunded: 'status-refunded' };
 
                 userOrders.forEach(order => {
                     const item = order.items[0]; // Assuming one event per order for simplicity
                     const eventDate = new Date(item.eventDate);
                     const isPastEvent = eventDate < new Date();
                     ticketsList.innerHTML += `
-                        <div class="bg-white rounded-lg shadow-md p-6 mb-6">
-                          <div class="flex flex-col md:flex-row">
-                            <div class="md:w-1/4 mb-4 md:mb-0 relative">
-                              <img src="${item.imageUrl || 'default-image.jpg'}" alt="${item.eventName}" class="w-full h-32 object-cover rounded">
-                              ${isPastEvent ? '<div class="absolute inset-0 flex items-center justify-center"><span class="stamp">SHOW OVER</span></div>' : ''}
-                            </div>
-                            <div class="md:w-3/4 md:pl-6">
-                              <h4 class="text-lg font-bold text-gray-800">${item.eventName}</h4>
-                              <p class="text-gray-600 text-sm mb-2"><i class="fas fa-calendar-day mr-1"></i> ${eventDate.toLocaleDateString()} • ${item.eventTime || 'TBD'}</p>
-                              <p class="text-gray-600 text-sm mb-3"><i class="fas fa-map-marker-alt mr-1"></i> ${item.venue}</p>
-                              <p class="text-gray-700 mb-2"><span class="font-medium">Tickets:</span> ${item.quantity} x ${item.ticketType}</p>
-                              <p class="text-gray-700 mb-2"><span class="font-medium">Total:</span> $${order.totalAmount}</p>
-                              <p class="text-gray-700 mb-4"><span class="font-medium">Status:</span> ${order.status}</p>
-                              ${order.status === 'completed' && !isPastEvent ? `<button class="text-red-600 hover:text-red-800 font-medium" onclick="refundTicket('${order._id}')">Request Refund</button>` : ''}
-                            </div>
+                        <div class="ticket-row">
+                          <div class="thumb">
+                            <img src="${item.imageUrl || 'https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?auto=format&fit=crop&w=600&q=80'}" alt="${item.eventName}">
+                            ${isPastEvent ? '<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;"><span class="stamp">SHOW OVER</span></div>' : ''}
+                          </div>
+                          <div style="flex:1;">
+                            <h4 style="font-size:18px;font-weight:600;color:var(--ink);margin-bottom:8px;">${item.eventName}</h4>
+                            <div class="meta-row"><i class="fas fa-calendar-day" aria-hidden="true"></i> ${eventDate.toLocaleDateString()} &bull; ${item.eventTime || 'TBD'}</div>
+                            <div class="meta-row"><i class="fas fa-location-dot" aria-hidden="true"></i> ${item.venue}</div>
+                            <p style="color:var(--body-text);font-size:14px;margin:10px 0 4px;"><span style="font-weight:600;color:var(--ink);">Tickets:</span> ${item.quantity} x ${item.ticketType}</p>
+                            <p style="color:var(--body-text);font-size:14px;margin:0 0 10px;"><span style="font-weight:600;color:var(--ink);">Total:</span> $${order.totalAmount}</p>
+                            <span class="status-pill ${statusClass[order.status] || 'status-pending'}">${order.status}</span>
+                            ${order.status === 'completed' && !isPastEvent ? `<div style="margin-top:12px;"><button class="btn btn-outline btn-sm" style="color:#dc2626;border-color:#fecaca;" onclick="refundTicket('${order._id}')">Request refund</button></div>` : ''}
                           </div>
                         </div>
                     `;

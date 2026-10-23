@@ -4,26 +4,39 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Checkout - SoldOutSoon</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        body { font-family: 'Poppins', sans-serif; background-color: #f8fafc; }
-    </style>
+    <link rel="stylesheet" href="theme.css">
 </head>
 <body>
     <div id="nav-placeholder"></div>
-    <section class="py-16 bg-gray-50">
-        <div class="max-w-3xl mx-auto bg-white p-8 rounded-lg shadow-md">
-            <h2 class="text-2xl font-bold text-gray-800 mb-6">Checkout</h2>
-            <div id="checkout-summary"></div>
-            <div class="mt-6">
-                <h3 class="text-xl font-bold text-gray-800 mb-4">Payment Method</h3>
-                <select id="payment-method" class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-purple-500">
-                    <option value="visa">Visa ending in 1234</option>
-                    <option value="mastercard">MasterCard ending in 5678</option>
-                </select>
+    <section class="section">
+        <div class="container">
+            <div class="page-title-row"><h1>Checkout</h1></div>
+            <div class="checkout-layout">
+                <div class="panel">
+                    <h2>Order summary</h2>
+                    <div id="checkout-summary"></div>
+                </div>
+                <div class="panel">
+                    <h2>Payment method</h2>
+                    <div class="field">
+                        <label for="payment-method">Card</label>
+                        <select id="payment-method" style="width:100%;height:48px;border:1.5px solid var(--lines);border-radius:12px;padding:0 14px;font-size:14.5px;font-family:inherit;">
+                            <option value="visa">Visa ending in 1234</option>
+                            <option value="mastercard">MasterCard ending in 5678</option>
+                        </select>
+                    </div>
+                    <button id="pay-now" class="btn btn-primary btn-block">Pay now</button>
+                    <div class="trust-notes">
+                        <div class="trust-note"><i class="fas fa-lock" aria-hidden="true"></i> Secure, encrypted checkout</div>
+                        <div class="trust-note"><i class="fas fa-bolt" aria-hidden="true"></i> Instant e-tickets by email</div>
+                    </div>
+                </div>
             </div>
-            <button id="pay-now" class="w-full mt-6 bg-purple-600 text-white py-2 rounded hover:bg-purple-700">Pay Now</button>
         </div>
     </section>
     <div id="footer-placeholder"></div>
@@ -43,21 +56,11 @@
 
             // Display checkout summary
             document.getElementById('checkout-summary').innerHTML = `
-                <div class="flex justify-between items-center mb-4">
-                    <span class="font-medium text-gray-700">Event:</span>
-                    <span>${checkout.eventName}</span>
-                </div>
-                <div class="flex justify-between items-center mb-4">
-                    <span class="font-medium text-gray-700">Ticket Type:</span>
-                    <span>${checkout.ticketType}</span>
-                </div>
-                <div class="flex justify-between items-center mb-4">
-                    <span class="font-medium text-gray-700">Quantity:</span>
-                    <span>${checkout.qty}</span>
-                </div>
-                <div class="flex justify-between items-center font-bold text-lg">
-                    <span class="text-gray-800">Total:</span>
-                    <span class="text-purple-600">$${checkout.total}</span>
+                <div class="summary-box">
+                    <div class="summary-row"><span>Event</span><span>${checkout.eventName || ''}</span></div>
+                    <div class="summary-row"><span>Ticket type</span><span>${checkout.ticketType}</span></div>
+                    <div class="summary-row"><span>Quantity</span><span>${checkout.qty}</span></div>
+                    <div class="summary-row total"><span>Total</span><span>$${checkout.total}</span></div>
                 </div>
             `;
 

@@ -4,33 +4,60 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register - SoldOutSoon</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        body { font-family: 'Poppins', sans-serif; background-color: #f8fafc; }
-    </style>
+    <link rel="stylesheet" href="theme.css">
 </head>
 <body>
     <div id="nav-placeholder"></div>
-    <section class="py-16 bg-gray-50">
-        <div class="max-w-md mx-auto bg-white p-8 rounded-lg shadow-md">
-            <h2 class="text-2xl font-bold text-gray-800 mb-6">Register</h2>
-            <form id="register-form">
-                <div class="mb-4">
-                    <label for="username" class="block text-gray-700 mb-2">Username</label>
-                    <input type="text" id="username" class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-purple-500" required>
+    <section class="auth-wrap">
+        <div class="container">
+            <div class="auth-card">
+                <div class="auth-visual" style="background-image:url('https://images.unsplash.com/photo-1459749411175-04bf5292ceea?auto=format&fit=crop&w=1200&q=80');">
+                    <div class="scrim" aria-hidden="true"></div>
+                    <div class="content">
+                        <span class="logo"><span class="logo-mark"><i class="fas fa-ticket-alt" aria-hidden="true"></i></span>SoldOutSoon</span>
+                        <h2>Your seat is waiting.</h2>
+                        <div class="benefit"><i class="fas fa-check" aria-hidden="true"></i> Instant e-tickets for every order</div>
+                        <div class="benefit"><i class="fas fa-check" aria-hidden="true"></i> Secure, encrypted checkout</div>
+                        <div class="benefit"><i class="fas fa-check" aria-hidden="true"></i> Refunds on eligible events</div>
+                    </div>
                 </div>
-                <div class="mb-4">
-                    <label for="email" class="block text-gray-700 mb-2">Email</label>
-                    <input type="email" id="email" class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-purple-500" required>
+                <div class="auth-form-side">
+                    <h1>Create your account</h1>
+                    <form id="register-form">
+                        <div class="field">
+                            <label for="username">Username</label>
+                            <div class="input-wrap">
+                                <input type="text" id="username" required>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label for="email">Email</label>
+                            <div class="input-wrap">
+                                <input type="email" id="email" required>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label for="password">Password</label>
+                            <div class="input-wrap">
+                                <input type="password" id="password" class="with-toggle" required>
+                                <button type="button" class="password-toggle" id="toggle-password" aria-label="Show password">
+                                    <i class="fas fa-eye" aria-hidden="true"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="field-row">
+                            <label class="checkbox-row"><input type="checkbox" id="keep-signed-in"> Keep me signed in</label>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block">Register</button>
+                    </form>
+                    <p class="auth-switch">Already have an account? <a href="login.html" class="link">Login</a></p>
                 </div>
-                <div class="mb-6">
-                    <label for="password" class="block text-gray-700 mb-2">Password</label>
-                    <input type="password" id="password" class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-purple-500" required>
-                </div>
-                <button type="submit" class="w-full bg-purple-600 text-white py-2 rounded hover:bg-purple-700">Register</button>
-            </form>
-            <p class="mt-4 text-center text-gray-600">Already have an account? <a href="login.html" class="text-purple-600 hover:underline">Login</a></p>
+            </div>
         </div>
     </section>
     <div id="footer-placeholder"></div>
@@ -41,6 +68,16 @@
             // Load navigation and footer
             fetch('nav.html').then(res => res.text()).then(html => document.getElementById('nav-placeholder').innerHTML = html);
             fetch('footer.html').then(res => res.text()).then(html => document.getElementById('footer-placeholder').innerHTML = html);
+
+            // Password show/hide toggle
+            const toggleBtn = document.getElementById('toggle-password');
+            const passwordInput = document.getElementById('password');
+            toggleBtn.addEventListener('click', () => {
+                const isHidden = passwordInput.type === 'password';
+                passwordInput.type = isHidden ? 'text' : 'password';
+                toggleBtn.innerHTML = isHidden ? '<i class="fas fa-eye-slash" aria-hidden="true"></i>' : '<i class="fas fa-eye" aria-hidden="true"></i>';
+                toggleBtn.setAttribute('aria-label', isHidden ? 'Hide password' : 'Show password');
+            });
 
             // Handle register form submission
             document.getElementById('register-form').addEventListener('submit', async (e) => {
