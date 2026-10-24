@@ -1,6 +1,6 @@
 async function register(username, email, password, firstName, lastName, phone, address) {
-  const backendUrl = 'http://localhost:3000'; // Ensure backend is running on this port
-  const response = await fetch('${backendUrl}/api/users/register', {
+  try {
+    const response = await fetch('/api/users/register', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ username, email, password, firstName, lastName, phone, address })
@@ -8,15 +8,17 @@ async function register(username, email, password, firstName, lastName, phone, a
     if (response.ok) {
       const user = await response.json();
       localStorage.setItem('user', JSON.stringify(user));
-      return true;
+      return { success: true };
     }
-    return false;
+    const error = await response.json().catch(() => ({}));
+    return { success: false, message: error.message };
+  } catch (err) {
+    return { success: false, message: 'Network error' };
   }
-  
+}
+
   async function login(username, password) {
-    const backendUrl = 'http://localhost:3000'; // Ensure backend is running on this port
-    console.log('Attempting login with:', { username, password });
-    const response = await fetch(`${backendUrl}/api/users/login`, {
+    const response = await fetch('/api/users/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ username, password })
